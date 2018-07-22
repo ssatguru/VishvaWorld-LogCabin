@@ -14,12 +14,17 @@ org.ssatguru.babylonjs.vishva.Vishva.vishvaFiles=[
        "f":[
         "skeleton.babylon",
         "texture.png"
-      ]},
-      {"d":"Vincent",
+      ]}
+    ]},
+    {"d":"furnitures",
+     "f":[
+      {"d":"table_chair",
        "f":[
-        "Vincent.babylon",
-        "Vincent.jpg",
-        "Vincent_texture_image.jpg"
+        "BLENDSWAP_LICENSE.txt",
+        "madeira.jpg",
+        "table_chair.babylon",
+        "table_chair.blend",
+        "table_chairs.blend1"
       ]}
     ]},
     {"d":"sounds",
@@ -350,6 +355,8 @@ org.ssatguru.babylonjs.vishva.Vishva.vishvaFiles=[
     {"d":"avatar",
      "f":[
       "starterAvatars.babylon",
+      "Vincent.blend",
+      "Vincent.jpg",
       "Vincent_texture_image.jpg"
     ]},
     {"d":"textures",
@@ -390,19 +397,10 @@ org.ssatguru.babylonjs.vishva.Vishva.vishvaFiles=[
   "vishvaFiles.js",
   {"d":"worlds",
    "f":[
-    "home-10.js",
-    "home-11.js",
-    "home-12.js",
-    "home-13.js",
-    "home-14.js",
-    "home-15.js",
-    "home-16.js",
-    "home-17.js",
-    "home-18.js",
-    "home-19.js",
-    "home-20.js",
-    "home-21.js",
-    "home-8.js",
-    "home-9.js"
+    "LogCabin-1.js",
+    "LogCabin-2.js",
+    "LogCabin-3.js",
+    "LogCabin-4.js",
+    "LogCabin.js"
   ]}
 ]
