@@ -1,2 +1,2 @@
-var defaultWorld = "LogCabin-5";
+var defaultWorld = "LogCabin";
 var noEditWorlds = [""];

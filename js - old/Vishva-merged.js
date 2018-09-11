@@ -6943,7 +6943,6 @@ var org;
                         vishvaSerialzed.snas = vishva.SNAManager.getSNAManager().serializeSnAs(this.scene);
                         var sceneObj = SceneSerializer.Serialize(this.scene);
                         //this.changeSoundUrl(sceneObj);
-                        this.removeSounds(sceneObj);
                         //sceneObj["VishvaSNA"] = snaObj;
                         sceneObj["VishvaSerialized"] = vishvaSerialzed;
                         var sceneString = JSON.stringify(sceneObj);
@@ -7057,16 +7056,6 @@ var org;
                                 sound["url"] = this.SOUND_ASSET_LOCATION + sound["url"];
                             }
                             //sceneObj["sounds"] = soundList;
-                        }
-                    };
-                    /**
-                     * there seems to be some issue with sounds attached to mesh "instances"
-                     * they donot deserialze properly
-                     */
-                    Vishva.prototype.removeSounds = function (sceneObj) {
-                        var sounds = sceneObj["sounds"];
-                        if (sounds != null) {
-                            sceneObj["sounds"] = [];
                         }
                     };
                     /**
@@ -8041,7 +8030,6 @@ var org;
                 var Vector2 = BABYLON.Vector2;
                 var FileInputType = org.ssatguru.babylonjs.vishva.gui.FileInputType;
                 var Range = org.ssatguru.babylonjs.vishva.gui.Range;
-                var SelectType = org.ssatguru.babylonjs.vishva.gui.SelectType;
                 var SNAManager = (function () {
                     function SNAManager() {
                         this.sensorList = [];
@@ -8339,12 +8327,6 @@ var org;
                                     else if (o["type"] === "Range") {
                                         var volume = new Range(o["min"], o["max"], o["value"], o["step"]);
                                         obj[pName] = volume;
-                                    }
-                                    else if (o["type"] === "SelectType") {
-                                        var st = new SelectType();
-                                        st.values = o["values"];
-                                        st.value = o["value"];
-                                        obj[pName] = st;
                                     }
                                 }
                             }
@@ -9449,20 +9431,13 @@ var org;
                 var FileInputType = org.ssatguru.babylonjs.vishva.gui.FileInputType;
                 var Range = org.ssatguru.babylonjs.vishva.gui.Range;
                 var Sound = BABYLON.Sound;
-                var SelectType = org.ssatguru.babylonjs.vishva.gui.SelectType;
                 var ActSoundProp = (function (_super) {
                     __extends(ActSoundProp, _super);
                     function ActSoundProp() {
-                        var _this = _super.call(this) || this;
-                        _this.soundFile = new FileInputType("Sound Files", "\.wav$|\.ogg$|\.mp3$", true);
+                        var _this = _super !== null && _super.apply(this, arguments) || this;
+                        _this.soundFile = new FileInputType("Sounf Files", "\.wav$|\.ogg$|\.mp3$", true);
                         _this.attachToMesh = false;
-                        _this.maxDistance = 100;
-                        _this.rolloffFactor = 1;
-                        _this.refDistance = 1;
-                        _this.distanceModel = new SelectType();
                         _this.volume = new Range(0.0, 1.0, 1.0, 0.1);
-                        _this.distanceModel.values = ["exponential", "linear"];
-                        _this.distanceModel.value = "exponential";
                         return _this;
                     }
                     return ActSoundProp;
@@ -9502,43 +9477,39 @@ var org;
                     */
                     ActuatorSound.prototype.onPropertiesChange = function () {
                         var _this = this;
-                        var _props = this.properties;
-                        if (_props.soundFile.value == null)
+                        var properties = this.properties;
+                        if (properties.soundFile.value == null)
                             return;
-                        var _sndOptions = {
-                            distanceModel: _props.distanceModel.value,
-                            rolloffFactor: _props.rolloffFactor,
-                            maxDistance: _props.maxDistance,
-                            refDistance: _props.refDistance
-                        };
-                        if (this.sound == null || _props.soundFile.value !== this.sound.name) {
+                        if (this.sound == null || properties.soundFile.value !== this.sound.name) {
                             if (this.sound != null) {
                                 this.stop();
                                 this.sound.dispose();
                             }
-                            this.actuating = true;
-                            this.sound = new Sound(_props.soundFile.value, _props.soundFile.value, this.mesh.getScene(), function () {
-                                _this.actuating = false;
-                                if (_props.autoStart || _this.queued > 0) {
-                                    _this.start(_this.properties.signalId);
-                                }
-                            }, _sndOptions);
-                            this.updateSound(_props);
+                            this.ready = false;
+                            this.sound = new Sound(properties.soundFile.value, properties.soundFile.value, this.mesh.getScene(), (function (properties) {
+                                return function () {
+                                    _this.updateSound(properties);
+                                };
+                            })(properties));
                         }
                         else {
                             this.stop();
-                            this.sound.updateOptions(_sndOptions);
-                            this.updateSound(_props);
+                            this.updateSound(properties);
                         }
                     };
                     ActuatorSound.prototype.updateSound = function (properties) {
                         var _this = this;
+                        this.ready = true;
                         if (properties.attachToMesh) {
                             this.sound.attachToMesh(this.mesh);
                         }
                         this.sound.onended = function () { return _this.onActuateEnd(); };
                         this.sound.setVolume(properties.volume.value);
-                        this.sound.setPosition(this.mesh.position.clone());
+                        if (properties.autoStart) {
+                            var started = this.start(this.properties.signalId);
+                            if (!started)
+                                this.queued++;
+                        }
                     };
                     ActuatorSound.prototype.getName = function () {
                         return "Sound";
@@ -9553,7 +9524,6 @@ var org;
                         }
                     };
                     ActuatorSound.prototype.cleanUp = function () {
-                        this.sound.dispose();
                     };
                     ActuatorSound.prototype.isReady = function () {
                         return this.ready;
