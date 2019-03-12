@@ -22,8 +22,11 @@ org.ssatguru.babylonjs.vishva.Vishva.vishvaFiles=[
        "f":[
         "BLENDSWAP_LICENSE.txt",
         "madeira.jpg",
+        "madeira.jpg.001.jpg",
         "table_chair.babylon",
         "table_chair.blend",
+        "table_chair.blend1",
+        "table_chair.dae",
         "table_chairs.blend1"
       ]}
     ]},
@@ -397,10 +400,9 @@ org.ssatguru.babylonjs.vishva.Vishva.vishvaFiles=[
   "vishvaFiles.js",
   {"d":"worlds",
    "f":[
-    "LogCabin-1.js",
-    "LogCabin-2.js",
-    "LogCabin-3.js",
-    "LogCabin-4.js",
+    "LogCabin-6.js",
+    "LogCabin-7.js",
+    "LogCabin-8.js",
     "LogCabin.js"
   ]}
 ]
